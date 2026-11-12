@@ -154,7 +154,10 @@ sup.cg{font-size:9px;color:#5f6873;margin-left:1px}.fsc{margin-left:4px;font-var
 .rbar .sg[data-t]{cursor:pointer}.rbar .sg[data-t]:hover{filter:brightness(1.12)}
 .ev-card.wide{grid-column:1/-1}
 .brk{display:flex;gap:10px;overflow-x:auto;padding:10px 14px;border-bottom:1px solid #e3e8ee;justify-content:safe center}
-.bcol{display:flex;flex-direction:column;flex:0 0 154px}
+.bcol{display:flex;flex-direction:column;flex:1 1 0;min-width:0;max-width:180px}
+@container (max-width:560px){.ev-card .brk{gap:5px;padding:8px 6px}.ev-card .brk .tn{display:none}
+  .ev-card .brk .ta{display:inline}.ev-card .bm{font-size:11.5px}.ev-card .bt{padding:2px 4px;gap:2px}
+  .ev-card .bk{font-size:10.5px;padding:1px 2px 2px}.ev-card .bh{font-size:11.5px}.ev-card .bh span{font-size:11px}}
 .bh{font-size:12px;font-weight:600;color:#262c33;text-align:center;margin:0 0 6px;line-height:1.25}
 .bh span{display:block;font-weight:400;color:#3b4350;font-size:11.5px}
 .bgs{flex:1;display:flex;flex-direction:column;justify-content:space-around;gap:8px}
