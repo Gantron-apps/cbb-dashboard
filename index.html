@@ -489,6 +489,12 @@ th{font-size:10.5px;letter-spacing:.3px}tr.grp td{font-size:11px;letter-spacing:
 #card .tcbr b,#card .tcbr em{text-align:right;font-style:normal}
 #card .tcbr .br{height:7px;border-radius:4px;background:#e6ebf0;overflow:hidden}
 #card .tcbr .br i{display:block;height:100%;border-radius:4px;background:var(--tc)}
+#card .tcbr .tp{margin-top:5px;padding-top:7px;border-top:1px solid #eaeef2}
+#card .tcbr .sc{display:flex;align-items:center;gap:6px;min-width:0}
+#card .tcbr .ic{width:21px;height:14px;flex:none;fill:#3b4350}
+#card .tcbr .tk{position:relative;flex:1;height:5px;border-radius:3px;background:#e6ebf0}
+#card .tcbr .tk u{position:absolute;top:50%;width:11px;height:11px;margin:-5.5px 0 0 -5.5px;border-radius:50%;
+  background:#111418;box-shadow:0 0 0 2px #fff}
 #card .tcnt{width:100%;border-collapse:collapse;background:none;margin:8px 0 0}
 #card .tcnt td{padding:3px 0;border-top:1px solid #eaeef2;border-bottom:none;background:none!important;vertical-align:top;
   line-height:1.3;white-space:normal}
@@ -508,6 +514,8 @@ th{font-size:10.5px;letter-spacing:.3px}tr.grp td{font-size:11px;letter-spacing:
 #card .tcsch .tm{display:block;margin:0}#card .tcsch .tm.far{display:none}#card .tcsch td.op{overflow:hidden}
 }
 .dark #card .tcbr .br{background:#30363d}.dark #card .tcbr .br i{background:var(--tcd)}
+.dark #card .tcbr .tp{border-color:#30363d}.dark #card .tcbr .ic{fill:#a2abb5}.dark #card .tcbr .tk{background:#30363d}
+.dark #card .tcbr .tk u{background:#e6edf3;box-shadow:0 0 0 2px #161b22}
 .dark #card .tcrk path{stroke:var(--tcd)}.dark #card .tcrk .ed,.dark #card .tcrk .xd{fill:var(--tcd)}.dark #card .tcrk .gr{stroke:#30363d}
 .dark #card .tcrk .gd{stroke:#161b22}.dark #card .tcrk .gd.w{fill:#3fb950}.dark #card .tcrk .gd.l{fill:#f85149}
 .dark #card .tcrk .xd{stroke:#161b22}.dark #card .tcrk text.el{fill:#e6edf3}
@@ -806,6 +814,10 @@ function tcOrd(n){const m=n%100,d=n%10;return n+((m>=11&&m<=13)?'th':d===1?'st':
 function tcTile(l,v,o){return `<div class="tct"><div class="l">${l}</div><div class="v"><b>${v}</b></div><div class="o">${o||'&nbsp;'}</div></div>`;}
 function tcBar(l,v,rk,n,tip){const w=rk?Math.max(Math.round((1-(rk-1)/Math.max(n-1,1))*100),2):0;
 return `<div title="${tip}${rk?': '+tcOrd(rk)+' of '+n:''}"><span class="l">${l}</span><b>${v}</b><span class="br"><i style="width:${w}%"></i></span><em>${rk?'#'+rk:''}</em></div>`;}
+const TC_SLOW='<svg class="ic" viewBox="0 0 24 16" aria-hidden="true"><path d="M4 11a7 6.2 0 0 1 14 0z"/><circle cx="20.4" cy="9.2" r="2.1"/><rect x="6" y="10.6" width="2.7" height="3.6" rx="1.2"/><rect x="13.3" y="10.6" width="2.7" height="3.6" rx="1.2"/><path d="M4.4 11l-2.9 1 2.6-2.6z"/></svg>';
+const TC_FAST='<svg class="ic" viewBox="0 0 24 16" aria-hidden="true"><ellipse cx="10.5" cy="10" rx="6.3" ry="3.5"/><circle cx="18" cy="7.2" r="2.6"/><ellipse cx="15.6" cy="3.3" rx="1" ry="3.1" transform="rotate(-28 15.6 3.3)"/><ellipse cx="13.6" cy="4.3" rx="1" ry="3" transform="rotate(-52 13.6 4.3)"/><circle cx="3.6" cy="8.4" r="1.5"/><path d="M7 12.2l-4.6 2.9h3.2l3.6-1.7z"/><path d="M14.2 12.4l4.4 2.7h-2.9l-3.3-1.5z"/></svg>';
+function tcTempo(v,rk,n){const f=rk?1-(rk-1)/Math.max(n-1,1):null;
+return `<div class="tp" title="possessions per game${rk?': '+tcOrd(rk)+' fastest of '+n:''}"><span class="l">Tempo</span><b>${v}</b><span class="sc">${TC_SLOW}<span class="tk">${f==null?'':`<u style="left:calc(5.5px + (100% - 11px)*${f.toFixed(3)})"></u>`}</span>${TC_FAST}</span><em>${rk?'#'+rk:''}</em></div>`;}
 function tcRow(l,p,k,tip,v){const pc=p==null?'—':tcF1(p),a=k?parseInt(k[1],10):NaN,w=v!=null?v:p,e=(w!=null&&a>0)?w*100-a:null;
 return `<tr${tip?` title="${tip}"`:''}><td>${l}</td><td class="ctr"${p>0?` style="background:rgba(26,127,55,${Math.min(0.2,0.25*p).toFixed(3)})!important"`:''}><b>${pc}</b></td>`
 +(HASK?`<td class="ctr kq"${k?` title="Kalshi bid ${k[0]}, ask ${k[1]}"`:''}>${a>0?a+'¢':'<span class="dim">—</span>'}${e!=null&&e>=1?`<span class="up" title="the contract is worth ${e.toFixed(1)} cents more to us than Kalshi's price, before its fee">▲${e.toFixed(1)}</span>`:''}</td>`:'')+'</tr>';}
@@ -915,7 +927,7 @@ h+=`<div class="tcgd"><section>`+tcRank(t,id)
 +`<div class="tcbr">${tcBar('Rating',t.r.toFixed(1),t.rk,NTEAMS,'points per game better than an average D-I team on a neutral court')}`
 +`${tcBar('Offense',t.o.toFixed(1),t.ork,NTEAMS,'points scored per 100 possessions against an average defense')}`
 +`${tcBar('Defense',t.d.toFixed(1),t.drk,NTEAMS,'points allowed per 100 possessions against an average offense (lower is better)')}`
-+`${tcBar('Tempo',t.t.toFixed(1),t.trk,NTEAMS,'possessions per game (the fastest team is No. 1)')}</div>`
++`${tcTempo(t.t.toFixed(1),t.trk,NTEAMS)}</div>`
 +(nt.length?`<table class="tcnt"><tbody>${nt.join('')}</tbody></table>`:'')+tcParts(t)
 +`<h4 class="tcgap">Odds</h4><table class="tcfn"><tbody><tr class="tcg"><td>Conference</td><td class="ctr" title="our chance">Ours</td>`
 +(HASK?`<td class="ctr" title="Kalshi's price to buy now, in cents (hover a price for its bid); the green mark is how many points our chance is above it">Kalshi</td>`:'')+'</tr>'
