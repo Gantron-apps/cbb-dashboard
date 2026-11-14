@@ -455,6 +455,12 @@ th{font-size:10.5px;letter-spacing:.3px}tr.grp td{font-size:11px;letter-spacing:
 .seg.gbv label.e1,.seg.gbv label.e1.on{background:rgba(26,127,55,.14);color:#111418}
 .seg.gbv label.e2,.seg.gbv label.e2.on{background:rgba(26,127,55,.34);color:#111418;font-weight:700}
 .seg.gbv label.e1.on,.seg.gbv label.e2.on{box-shadow:inset 0 0 0 2px var(--acc-btn)}
+
+.seg.gbv label:before{content:'';display:inline-block;box-sizing:border-box;width:11px;height:11px;margin-right:5px;
+  border:1.5px solid currentColor;border-radius:50%;vertical-align:-1.5px}
+.seg.gbv label.on:before{background:radial-gradient(circle,currentColor 0 2.4px,transparent 3px)}
+
+@media (max-width:700px){.seg.gbv label{padding:4px}.seg.gbv label:before{width:10px;height:10px;margin-right:4px}}
 .gbdw{order:9;flex:1 0 100%;display:flex;justify-content:center}
 #games .gbsum{text-align:center;margin:0 0 6px;white-space:nowrap}#games .gbsum .sep{margin:0 7px;color:#8c959f}
 #games .gbrb{margin-left:0}
@@ -861,25 +867,33 @@ const at=m=>{let r=pts[0];for(const p of pts){if(p[0]<=m)r=p;else break;}return 
 const gms=[];
 if(typeof GAMES!=='undefined')GAMES.forEach(q=>{if(q[6]==null||(q[2]!==id&&q[3]!==id))return;const m=Date.parse(q[0]+'T12:00:00');if(m<t0||m>t1)return;
 const home=q[2]===id,us=home?q[6]:q[7],th=home?q[7]:q[6],o=home?q[3]:q[2],on=(TEAMS[o]&&TEAMS[o].n)||ONM[o]||o;
-gms.push({m,w:us>th,txt:`${us>th?'W':'L'} ${us}-${th} ${q[4]?'vs':home?'vs':'at'} ${on}`});});
+gms.push({m,d:q[0],w:us>th,txt:`${us>th?'W':'L'} ${us}-${th} ${q[4]?'vs':home?'vs':'at'} ${on}`});});
 const e=pts[pts.length-1];
 let g=tick(lo)+(hi>lo?tick(hi):'')+`<path d="${pts.map((p,i)=>(i?'L':'M')+f1(X(p[0]))+' '+f1(Y(p[1]))).join(' ')}"/>`
 +`<circle class="ed" cx="${f1(X(e[0]))}" cy="${f1(Y(e[1]))}" r="3.6"/>`
 +gms.map(x=>`<circle class="gd ${x.w?'w':'l'}" cx="${f1(X(x.m))}" cy="${f1(Y(at(x.m)[1]))}" r="4.4"/>`).join('')
 +`<text class="el" x="${f1(X(e[0])+8)}" y="${f1(Y(e[1])+4)}">#${e[1]}</text>`
 +`<text x="${L}" y="${H-3}">${tcDay(RDAYS[pts[0][2]])}</text><text x="${W-R}" y="${H-3}" text-anchor="end">${tcDay(RDAYS[e[2]])}</text>`
-+`<line class="xh" x1="0" x2="0" y1="${T}" y2="${H-B}" style="display:none"/><circle class="xd" r="4.6" cx="0" cy="0" style="display:none"/>`;
++`<line class="xh" x1="0" x2="0" y1="0" y2="${H-B}" style="display:none"/><circle class="xd" r="4.6" cx="0" cy="0" style="display:none"/>`;
 el.innerHTML=`<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="power rank over time; the dots on the line are games, green a win and red a loss">${g}</svg><div class="tip"></div>`;
 const svg=el.querySelector('svg'),tip=el.querySelector('.tip'),xh=svg.querySelector('.xh'),xd=svg.querySelector('.xd');
-const hide=()=>{xh.style.display='none';xd.style.display='none';tip.style.display='none';};
+const hide=()=>{xh.style.display='none';xd.style.display='none';tip.style.display='none';};el._hide=hide;
 const move=ev=>{const px=ev.clientX-svg.getBoundingClientRect().left;let b=pts[0],bd=1e9;
 pts.forEach(p=>{const dd=Math.abs(X(p[0])-px);if(dd<bd){bd=dd;b=p;}});
-const xx=X(b[0]);xh.setAttribute('x1',xx);xh.setAttribute('x2',xx);xh.style.display='';
-xd.setAttribute('cx',xx);xd.setAttribute('cy',Y(b[1]));xd.style.display='';
-tip.innerHTML=`<div class="td">${tcDay(RDAYS[b[2]])}</div><div>Power Rank <b>#${b[1]}</b></div>`
-+gms.filter(x=>x.m===b[0]).map(x=>`<div class="${x.w?'up':'dn'}">${esc(x.txt)}</div>`).join('');
-tip.style.display='block';const tw=tip.offsetWidth;tip.style.left=(xx+12+tw<=W?xx+12:Math.max(xx-tw-12,0))+'px';tip.style.top=T+'px';};
-svg.addEventListener('pointermove',move);svg.addEventListener('pointerdown',move);svg.addEventListener('pointerleave',hide);}
+let gm=null,gd=ev.pointerType==='mouse'?5:14;
+gms.forEach(x=>{const dd=Math.abs(X(x.m)-px);if(dd<=gd){gd=dd;gm=x;}});
+const m=gm?gm.m:b[0],rk=gm?at(m)[1]:b[1],xx=X(m);
+xh.setAttribute('x1',xx);xh.setAttribute('x2',xx);xh.style.display='';
+xd.setAttribute('cx',xx);xd.setAttribute('cy',Y(rk));xd.style.display='';
+tip.innerHTML=`<div class="td">${tcDay(gm?gm.d:RDAYS[b[2]])}</div><div>Power Rank <b>#${rk}</b></div>`
++gms.filter(x=>x.m===m).map(x=>`<div class="${x.w?'up':'dn'}">${esc(x.txt)}</div>`).join('');
+tip.style.display='block';const tw=tip.offsetWidth,th=tip.offsetHeight,bx=el.closest('.box');
+const room=el.getBoundingClientRect().top-(bx?bx.getBoundingClientRect().top:0);
+if(room>=th+6){tip.style.top=(-th-4)+'px';tip.style.left=Math.min(Math.max(xx-tw/2,0),Math.max(W-tw,0))+'px';}
+else{tip.style.top=T+'px';tip.style.left=(xx+12+tw<=W?xx+12:Math.max(xx-tw-12,0))+'px';}};
+svg.addEventListener('pointermove',move);svg.addEventListener('pointerdown',move);
+svg.addEventListener('pointerleave',ev=>{if(ev.pointerType==='mouse')hide();});}
+document.addEventListener('pointerdown',ev=>{const k=document.getElementById('tcrk');if(k&&k._hide&&!k.contains(ev.target))k._hide();});
 function tcPct(p){return p>=0.995?'>99%':p<0.005?'<1%':Math.round(p*100)+'%';}
 function tcLine(m){if(m==null)return '—';const r=Math.round(m*10)/10;return r===0?'PK':(r>0?'−':'+')+Math.abs(r).toFixed(1);}
 function tcOpp(o){const ot=TEAMS[o];
