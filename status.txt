@@ -1,12 +1,12 @@
 {
- "running": false,
- "kind": "update",
- "started": "2026-11-17T22:00:02+00:00",
- "eta": "2026-11-17T22:54:14+00:00",
- "step": 11,
- "steps": 11,
- "stage": "done",
- "finished": "2026-11-17T22:15:58+00:00",
- "ok": true,
- "run": 1794953733
+ "running": true,
+ "kind": "evening lines",
+ "started": "2026-11-18T03:00:02+00:00",
+ "eta": "2026-11-18T03:01:32+00:00",
+ "step": 1,
+ "steps": 5,
+ "stage": "updating the lines",
+ "finished": null,
+ "ok": null,
+ "run": null
 }
