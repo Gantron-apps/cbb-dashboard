@@ -3,9 +3,9 @@
  "kind": "update",
  "started": "2026-11-22T16:15:57+00:00",
  "eta": "2026-11-22T16:31:27+00:00",
- "step": 1,
+ "step": 2,
  "steps": 13,
- "stage": "collecting the data",
+ "stage": "running the model",
  "finished": null,
  "ok": null,
  "run": null
