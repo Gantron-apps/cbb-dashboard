@@ -1,12 +1,12 @@
 {
- "running": false,
+ "running": true,
  "kind": "update",
- "started": "2026-11-21T19:41:53+00:00",
- "eta": "2026-11-21T20:04:29+00:00",
- "step": 13,
+ "started": "2026-11-22T16:15:57+00:00",
+ "eta": "2026-11-22T16:31:27+00:00",
+ "step": 1,
  "steps": 13,
- "stage": "done",
- "finished": "2026-11-21T19:57:18+00:00",
- "ok": true,
- "run": 1795290991
+ "stage": "collecting the data",
+ "finished": null,
+ "ok": null,
+ "run": null
 }
