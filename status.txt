@@ -1,12 +1,12 @@
 {
- "running": true,
+ "running": false,
  "kind": "update",
  "started": "2026-11-24T14:10:18+00:00",
  "eta": "2026-11-24T14:32:24+00:00",
- "step": 2,
+ "step": 13,
  "steps": 13,
- "stage": "running the model",
- "finished": null,
- "ok": null,
- "run": null
+ "stage": "done",
+ "finished": "2026-11-24T14:35:30+00:00",
+ "ok": true,
+ "run": 1795530852
 }
